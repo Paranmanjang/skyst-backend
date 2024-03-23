@@ -21,11 +21,11 @@ RUN apt-get update -qq -y && \
         wget \
         unzip \
         && \
-    wget -q -O /opt/chrome-linux64.zip [Direct Chrome download URL] && \
+    wget -q -O /opt/chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
     unzip /opt/chrome-linux64.zip -d /opt/ && \
     rm /opt/chrome-linux64.zip && \
     ln -s /opt/chrome/chrome /usr/local/bin/chrome && \
-    wget -q -O /opt/chromedriver-linux64.zip [Direct Chromedriver download URL] && \
+    wget -q -O /opt/chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-121-0-6167-85 && \
     unzip /opt/chromedriver-linux64.zip -d /opt/ && \
     rm /opt/chromedriver-linux64.zip && \
     mv /opt/chromedriver /usr/local/bin/chromedriver && \
