@@ -7,8 +7,7 @@ from auth.router import router as auth_router
 from bookmarks.router import router as bookmarks_router
 from recommendations.router import router as recommendations_router
 from users.router import router as users_router
-
-from utils.web_crawler import get_title_and_content_selenium
+from test.router import router as test_router
 
 app = FastAPI(
     title="Love-SKYST",
@@ -27,6 +26,7 @@ app = FastAPI(
 )
 
 # 라우터 등록
+# app.include_router(test_router)
 app.include_router(bookmarks_router)
 app.include_router(recommendations_router)
 
@@ -53,9 +53,3 @@ app.add_middleware(
 async def root():
     result = {"파란만장 화이팅!"}
     return result
-
-@app.get("/content_and_title")
-async def get_content_and_title(url: str):
-    
-    title, content = get_title_and_content_selenium(url)
-    return {"title": title, "content": content}

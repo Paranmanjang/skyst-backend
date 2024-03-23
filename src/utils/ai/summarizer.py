@@ -1,11 +1,9 @@
 import openai
-from config import GenAI_Settings
+from config import AI_Settings
 
-for _ in range(100):
-    print(GenAI_Settings.openai_api_key)
+key = AI_Settings().openai_key
 
-openai.api_key = GenAI_Settings.openai_api_key
-
+openai.api_key = key
 
 def generate_summary(content: str):
 
@@ -25,7 +23,7 @@ def generate_summary(content: str):
             model="gpt-3.5-turbo",
             messages=messages,
             temperature=0.7,  # Adjust for creativity; lower for more precise responses
-            max_tokens=100,  # Adjust for length; longer for more detailed responses
+            max_tokens=1000,  # Adjust for length; longer for more detailed responses
         )
 
         summary_response = completion.choices[0].message.content

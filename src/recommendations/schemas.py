@@ -21,5 +21,3 @@ class BookmarkBase(BaseModel):
     summary: Optional[str] = Field(default=None, title="summary", description="북마크한 페이지의 summary", example="마음의 소리")
     created_at: Optional[datetime] = Field(default=None, title="created_at", description="북마크한 시간", example=datetime.now())
 
-class RecommendationResponse(BaseModel):
-    recommended_pages: List[BookmarkBase]

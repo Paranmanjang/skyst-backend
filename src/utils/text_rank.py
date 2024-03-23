@@ -1,49 +1,49 @@
-from krwordrank.word import KRWordRank
-import re
-from konlpy.tag import Okt
+from summa import keywords
+from googletrans import Translator
 
 
-def split_noun_sentences(text):
-    okt = Okt()
-    sentences = text.replace(". ", ".")
-    sentences = re.sub(r'([^\n\s\.\?!]+[^\n\.\?!]*[\.\?!])',
-                       r'\1\n', sentences).strip().split("\n")
+def extract_keyword():
+    text = """[앵커]
 
-    result = []
-    for sentence in sentences:
-        if len(sentence) == 0:
-            continue
-        sentence_pos = okt.pos(sentence, stem=True)
-        nouns = [word for word, pos in sentence_pos if pos ==
-                 'Noun' and len(word) > 1]
-        if len(nouns) < 2:
-            continue
-        result.append(' '.join(nouns) + '.')
+의대증원 정책에 반대하는 다수의 전공의와 의대생들이 집단행동을 이어가고 있지만, 의료 현장을 지키려는 소수의 의사와 학생들도 있습니다.
 
+이들이 오늘(23일) '집단 행동 강요'를 멈춰달라고 호소했습니다.
+
+박경준 기잡니다.
+
+[리포트]
+
+의대 증원 반대를 위한 집단 행동에 반대하는 이른바 '다른 생각을 가진 의대생과 전공의'라는 단체의 익명 SNS 계정.
+
+긴급 성명이 게재됐습니다.
+
+이들은 "전체주의적인 조리돌림과 폭력적 강요를 중단하라"며 "일부 학교에서 복귀 희망자나 수업 참여 학생을 대상으로 대면 사과와 소명을 요구하고 있다"고 전했습니다.
+
+그러면서 이런 일은 "단체행동 동참을 협박하는 것과 다르지 않다"고 비판했습니다.
+
+이어 "단체 행동에 참여하지 않으면 '반역자'로 여기고 색출만 요구한다"고 꼬집었습니다.
+
+앞서 정부는 협박성 보복에 대해 엄정 대응을 예고한 바 있습니다.
+
+[한덕수/국무총리/지난 8일 : "사람의 생명을 구하는 의료인이라면 해서는 안 되는 언행입니다. 정부는 이런 행태를 절대 좌시하지 않겠습니다."]
+
+경찰 역시, 집단 행동에 동참하지 않았던 의대생과 공보의 명단이 인터넷 커뮤니티에 게시된 것과 관련해 강제 수사를 벌이고 있습니다."""
+
+    # 한글을 영어로 번역
+    translator = Translator()
+    english_text = translator.translate(text, src='ko', dest='en').text
+
+    # 번역된 텍스트에서 키워드 추출
+    english_keywords = keywords.keywords(english_text, ratio=0.5, words=3)
+
+    # 영어 키워드를 한글로 다시 번역하여 출력
+    lst = []
+    for keyword in english_keywords.split('\n'):
+        print(keyword)
+        keyword = translator.translate(keyword, src='en', dest='ko').text
+        lst.append(keyword)
+    result = '+'.join(lst)
     return result
 
 
-text = "서울 지진 피해에 대한 데이터 분석을 위해서는 어떤 종류의 데이터를 사용해야 할지 먼저 생각해보아야 합니다. 예를 들어, 지진 발생 시간, 지진 규모, 지진 발생 지역, 피해 규모 등의 정보가 필요할 것입니다. 서울 지진 피해 분석 예시: 서울 지역에서 최근 몇 년간 발생한 지진 데이터를 수집하여 지진 발생 건수, 지진 규모, 지진 발생 지역 등의 정보를 파악할 수 있습니다. 이를 바탕으로 서울 지역에서 지진 발생이 가장 많은 지역, 지진 규모와 피해 규모 간의 상관 관계, 지진 발생 시간대 등을 분석할 수 있습니다. 또한, 특정 지역에서의 지진 발생 시 피해 규모가 어떻게 나타나는지 분석하여 지진 대비 대응 전략을 마련할 수 있습니다. 서울 지진에 대한 데이터는 국가지진정보센터에서 제공하는 '국내 지진 정보 시스템'에서 확인할 수 있습니다. 이 시스템에서는 지난 1년간의 국내 지진 정보를 확인할 수 있으며, 서울 지역에서 발생한 지진 정보도 포함되어 있습니다. 이를 바탕으로 데이터를 수집하고 분석할 수 있습니다."
-
-
-def extract_keyword(text, rank_num=3):
-    min_count = 1   # 단어의 최소 출현 빈도수
-    max_length = 10  # 단어의 최대 길이
-    wordrank_extractor = KRWordRank(min_count=min_count, max_length=max_length)
-    beta = 0.85
-    max_iter = 20
-    texts = split_noun_sentences(text)
-    keywords, rank, graph = wordrank_extractor.extract(texts, beta, max_iter)
-    result = []
-    for word, r in sorted(keywords.items(), key=lambda x: x[1], reverse=True):
-        if rank_num == 0:
-            break
-        if '.' in word:
-            result.append(word[:-1])
-        else:
-            result.append(word)
-        rank_num -= 1
-    print('+'.join(result))
-
-
-extract_keyword(text, 3)
+print(extract_keyword())

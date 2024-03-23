@@ -18,8 +18,8 @@ class DB_Settings(BaseSettings):
     db_user: str = os.getenv("DB_USER")
 
 
-class GenAI_Settings(BaseSettings):
-    openai_api_key: str = os.getenv("OPENAI_API_KEY")
+class AI_Settings(BaseSettings):
+    openai_key: str = os.getenv("OPENAI_API_KEY")
     pinecone_api_key: str = os.getenv("PINECONE_API_KEY")
 
 

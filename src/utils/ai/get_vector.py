@@ -1,8 +1,8 @@
 from openai import OpenAI
-from config import OpenAI_Settings
+from config import AI_Settings
 
 client = OpenAI(
-    api_key=OpenAI_Settings.openai_api_key
+    api_key=AI_Settings().openai_key
 )
 
 
