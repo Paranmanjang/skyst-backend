@@ -12,24 +12,24 @@ RUN pip install --no-cache-dir -r requirements/prod.txt
 
 # Install required packages and utilities for Chrome and Chromedriver
 RUN apt-get update -qq -y && \
-    apt-get install -y \
-        libasound2 \
-        libatk-bridge2.0-0 \
-        libgtk-4-1 \
-        libnss3 \
-        xdg-utils \
-        wget \
-        unzip \
+    && apt-get install -y \
+    && libasound2 \
+    && ibatk-bridge2.0-0 \
+    && libgtk-4-1 \
+    && libnss3 \
+    && xdg-utils \
+    && wget \
+    && unzip \
         && \
-    wget -q -O /opt/chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
-    unzip /opt/chrome-linux64.zip -d /opt/ && \
-    rm /opt/chrome-linux64.zip && \
-    ln -s /opt/chrome/chrome /usr/local/bin/chrome && \
-    wget -q -O /opt/chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-121-0-6167-85 && \
-    unzip /opt/chromedriver-linux64.zip -d /opt/ && \
-    rm /opt/chromedriver-linux64.zip && \
-    mv /opt/chromedriver /usr/local/bin/chromedriver && \
-    chmod +x /usr/local/bin/chrome /usr/local/bin/chromedriver
+    && wget -q -O /opt/chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
+    && unzip /opt/chrome-linux64.zip -d /opt/ && \
+    && rm /opt/chrome-linux64.zip && \
+    && ln -s /opt/chrome/chrome /usr/local/bin/chrome && \
+    && wget -q -O /opt/chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-121-0-6167-85 && \
+    && unzip /opt/chromedriver-linux64.zip -d /opt/ && \
+    && rm /opt/chromedriver-linux64.zip && \
+    && mv /opt/chromedriver /usr/local/bin/chromedriver && \
+    && chmod +x /usr/local/bin/chrome /usr/local/bin/chromedriver
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
