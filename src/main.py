@@ -8,7 +8,7 @@ from bookmarks.router import router as bookmarks_router
 from recommendations.router import router as recommendations_router
 from users.router import router as users_router
 
-from utils.web_crawler import get_title_and_content_selenium
+from utils.web_crawler import get_webpage_content
 
 app = FastAPI(
     title="Love-SKYST",
@@ -55,7 +55,8 @@ async def root():
     return result
 
 @app.get("/content_and_title")
-async def get_content_and_title(url: str):
+async def get_crawling_result(url: str):
     
-    title, content = get_title_and_content_selenium(url)
+    title, content = get_webpage_content(url)
+
     return {"title": title, "content": content}
