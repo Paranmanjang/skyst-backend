@@ -3,12 +3,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# from auth.router import router as auth_router
 from auth.router import router as auth_router
 from bookmarks.router import router as bookmarks_router
-from contents.router import router as contents_router
-from keywords.router import router as keywords_router
-from search.router import router as search_router
+from recommendations.router import router as recommendations_router
 from users.router import router as users_router
 
 from utils.web_crawler import get_title_and_content_selenium
@@ -30,12 +27,8 @@ app = FastAPI(
 )
 
 # 라우터 등록
-# app.include_router(auth_router)
 app.include_router(bookmarks_router)
-# app.include_router(contents_router)
-# app.include_router(keywords_router)
-# app.include_router(search_router)
-# app.include_router(users_router)
+app.include_router(recommendations_router)
 
 # CORS 설정
 origins = [

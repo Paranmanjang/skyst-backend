@@ -70,7 +70,7 @@ def create_bookmark(
         page_id=db_bookmark.page_id,
         created_at=db_bookmark.created_at,
         title=page.title,
-        summarization=page.summary
+        summary=page.summary
     )
 
     return response
