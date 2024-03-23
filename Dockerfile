@@ -10,37 +10,45 @@ COPY requirements/prod.txt requirements/prod.txt
 # Install any needed packages specified in requirements files
 RUN pip install --no-cache-dir -r requirements/prod.txt
 
-# Install system dependencies for Chrome and ChromeDriver
-RUN apt-get update && apt-get install -y \
+# Install required packages and utilities for Chrome and Chromedriver
+# Install required packages for Google Chrome and wget to download Chrome and Chromedriver
+RUN apt-get update -qqy && apt-get -qqy install \
     wget \
     unzip \
-    libglib2.0-0 \
-    libnss3 \
-    libgconf-2-4 \
-    libfontconfig1 \
-    libxi6 \
-    libxrender1 \
-    libxrandr2 \
-    libxfixes3 \
-    libxcursor1 \
-    libxinerama1 \
-    libxcomposite1 \
+    fonts-liberation \
     libasound2 \
-    libxdamage1 \
-    libxtst6 \
-    libatk1.0-0 \
     libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    && rm -rf /var/lib/apt/lists/*
+    libatk1.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libgdk-pixbuf-2.0-0 \
+    libnspr4 \
+    libnss3 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxkbcommon0 \
+    libxrandr2 \
+    xdg-utils \
+    libu2f-udev \
+    libvulkan1 \
+    libgbm1 \
+    libgtk-3-0
 
-# Install Chrome
+# Download and install Google Chrome.
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
+    && apt install -y ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb
 
-# Chrome 설치 후
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install \
-    && ln -s /usr/bin/google-chrome /usr/bin/chrome
+# Set ChromeDriver version
+ENV CHROMEDRIVER_VERSION 114.0.5735.90
+
+# Download and install ChromeDriver
+RUN wget -q --continue -P /chromedriver "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" \
+    && unzip /chromedriver/chromedriver* -d /usr/local/bin/ \
+    && rm /chromedriver/chromedriver_linux64.zip
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy the entire FastAPI project to the container
 COPY /src /app

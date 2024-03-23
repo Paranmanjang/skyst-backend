@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
+
 def get_webpage_content(url):
     # Setup WebDriver
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
@@ -11,6 +12,7 @@ def get_webpage_content(url):
     # Replace the URL below with the webpage you're interested in
     driver.get(url)
     
+
 
     # Wait a bit for the page to load
     time.sleep(2)
