@@ -19,7 +19,7 @@ class BookmarkBase(BaseModel):
     page_id: int = Field(..., title="page_id", description="북마크한 페이지의 page_id", example=1, ge=1)
     bookmark_id: int = Field(..., title="bookmark_id", description="북마크 id", example=1, ge=1)
     summary: Optional[str] = Field(default=None, title="summary", description="북마크한 페이지의 summary", example="마음의 소리")
-
+    created_at: Optional[datetime] = Field(default=None, title="created_at", description="북마크한 시간", example=datetime.now())
 
 class RecommendationResponse(BaseModel):
     recommended_pages: List[BookmarkBase]

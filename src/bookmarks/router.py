@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import Bookmark, Page
 from bookmarks.schemas import BookmarkCreate, BookmarkResponse
+from bookmarks.service import get_bookmarks_service
 
 router = APIRouter(
     prefix="/bookmarks",
@@ -74,3 +75,79 @@ def create_bookmark(
     )
 
     return response
+
+@router.get(
+    "/newest",
+    response_model=List[BookmarkResponse],
+    status_code=status.HTTP_200_OK,
+    description="""
+    - Query Parameter는 아래와 같음.
+    - offset은 몇 번째부터 데이터를 가져올지 결정. default 값은 0임. 값을 입력하지 않으면 default 값이 적용됨.
+    - limit은 최대 몇 개의 데이터를 가져올지 결정. default 값은 10임. 값을 입력하지 않으면 default 값이 적용됨.
+    - 테스트는 어느 정도 진행했지만, 더 많은 테스트가 필요함! db에도 더 많은 데이터를 넣어서 테스트 진행해야 함.
+    """,
+    summary="최신순으로 북마크 목록 조회",
+    response_description={
+        status.HTTP_200_OK: {
+            "description": "최신순으로 북마크 목록 조회 성공"
+        }
+    }
+)
+async def get_bookmarks(
+    db: Session = Depends(get_db),
+    user_id: int = Query(None, description="User ID", gt=0, example=1),
+    offset: int = Query(0, description="Offset of the first item to return", ge=0, example=0),
+    limit: int = Query(10, description="Maximum number of items to return", ge=1, le=100, example=10),
+):
+    return get_bookmarks_service(db, user_id, offset, limit)
+
+
+@router.get(
+    "/frequent",
+    response_model=List[BookmarkResponse],
+    status_code=status.HTTP_200_OK,
+    description="""
+    - Query Parameter는 아래와 같음.
+    - offset은 몇 번째부터 데이터를 가져올지 결정. default 값은 0임. 값을 입력하지 않으면 default 값이 적용됨.
+    - limit은 최대 몇 개의 데이터를 가져올지 결정. default 값은 10임. 값을 입력하지 않으면 default 값이 적용됨.
+    - 테스트는 어느 정도 진행했지만, 더 많은 테스트가 필요함! db에도 더 많은 데이터를 넣어서 테스트 진행해야 함.
+    """,
+    summary="빈도순으로 북마크 목록 조회",
+    response_description={
+        status.HTTP_200_OK: {
+            "description": "빈도순으로 북마크 목록 조회 성공"
+        }
+    }
+)
+async def get_bookmarks(
+    db: Session = Depends(get_db),
+    user_id: int = Query(None, description="User ID", gt=0, example=1),
+    offset: int = Query(0, description="Offset of the first item to return", ge=0, example=0),
+    limit: int = Query(10, description="Maximum number of items to return", ge=1, le=100, example=10),
+):
+    return get_bookmarks_service(db, user_id, offset, limit)
+
+@router.get(
+    "/forgotten",
+    response_model=List[BookmarkResponse],
+    status_code=status.HTTP_200_OK,
+    description="""
+    - Query Parameter는 아래와 같음.
+    - offset은 몇 번째부터 데이터를 가져올지 결정. default 값은 0임. 값을 입력하지 않으면 default 값이 적용됨.
+    - limit은 최대 몇 개의 데이터를 가져올지 결정. default 값은 10임. 값을 입력하지 않으면 default 값이 적용됨.
+    - 테스트는 어느 정도 진행했지만, 더 많은 테스트가 필요함! db에도 더 많은 데이터를 넣어서 테스트 진행해야 함.
+    """,
+    summary="망각했을 가능성이 높은 순서로 북마크 목록 조회",
+    response_description={
+        status.HTTP_200_OK: {
+            "description": "망각했을 가능성이 높은 순서로 북마크 목록 조회 성공"
+        }
+    }
+)
+async def get_bookmarks(
+    db: Session = Depends(get_db),
+    user_id: int = Query(None, description="User ID", gt=0, example=1),
+    offset: int = Query(0, description="Offset of the first item to return", ge=0, example=0),
+    limit: int = Query(10, description="Maximum number of items to return", ge=1, le=100, example=10),
+):
+    return get_bookmarks_service(db, user_id, offset, limit)
