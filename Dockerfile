@@ -37,6 +37,11 @@ RUN apt-get update && apt-get install -y \
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 
+# Chrome 설치 후
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install \
+    && ln -s /usr/bin/google-chrome /usr/bin/chrome
+
 # Copy the entire FastAPI project to the container
 COPY /src /app
 
