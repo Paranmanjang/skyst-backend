@@ -61,14 +61,16 @@ def create_bookmark(
     db.commit()
     db.refresh(db_bookmark)
 
+    db_bookmark = db.query(Bookmark).filter(Bookmark.bookmark_id == db_bookmark.bookmark_id).first()
+
     response = BookmarkResponse(
+        user_id=db_bookmark.user_id,
+        url=bookmark.url,
         bookmark_id=db_bookmark.bookmark_id,
         page_id=db_bookmark.page_id,
-        user_id=db_bookmark.user_id,
         created_at=db_bookmark.created_at,
-        url=bookmark.url,
         title=page.title,
         summarization=page.summary
     )
-    
-    return db_bookmark
+
+    return response

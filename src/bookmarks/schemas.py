@@ -15,7 +15,6 @@ class BookmarkCreate(BookmarkBase):
 class BookmarkResponse(BookmarkBase):
     bookmark_id: int = Field(..., title="bookmark_id", description="북마크 id", example=1, ge=1)
     page_id: int = Field(..., title="page_id", description="북마크한 페이지의 page_id", example=1, ge=1)
-    url: str = Field(..., title="url", description="북마크한 페이지의 url", example="https://mindorizip.tistory.com")
     created_at: datetime = Field(..., title="created_at", description="북마크 생성일", example="2024-10-16 00:00:00")
     title: Optional[str] = Field(default=None, title="title", description="북마크한 페이지의 title", example="마음의 소리")
     summarization: Optional[str] = Field(default=None, title="summarization", description="북마크한 페이지의 summarization", example="마음의 소리")

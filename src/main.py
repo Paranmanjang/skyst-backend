@@ -14,7 +14,7 @@ from users.router import router as users_router
 from utils.web_crawler import get_title_and_content_selenium
 
 app = FastAPI(
-    title="GALPY",
+    title="Love-SKYST",
     description="파란만장 팀의 SKYST 프로젝트의 API 문서",
     version="0.1.0",
     terms_of_service="",
