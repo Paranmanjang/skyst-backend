@@ -5,9 +5,8 @@ from fastapi import APIRouter, Depends, Query, Path, HTTPException, status
 from sqlalchemy.orm import Session
 
 from database import get_db
-# from models import
-# from schemas import
-# from serivce import
+from models import Bookmark, Page
+from bookmarks.schemas import BookmarkCreate, BookmarkResponse
 
 router = APIRouter(
     prefix="/bookmarks",
@@ -22,23 +21,54 @@ router = APIRouter(
 
 @router.post(
     "/",
-    # response_model=model,
-    # status_code=status.HTTP_201_CREATED,
-    description="""
-    - ★user_id 또는 anonymous_user_id 둘 중 하나는 반드시 입력해야 함
-    - ★user_id와 anonymous_user_id 둘 다 입력할 수 없음. 둘 중 하나만 입력해야 함!!!
-    - chains 폴더에 있는 파일들 완성시켜야 함
-    """,
-    # summary="북마크 추가",
+    response_model=BookmarkResponse,
+    status_code=status.HTTP_201_CREATED,
+    description="북마크 추가",
+    summary="북마크 추가",
     response_description={
         status.HTTP_201_CREATED: {
             "description": "북마크 추가 성공"
         }
     }
 )
-async def function_name(
-    # bookmark: BookmarkCreate,
+def create_bookmark(
+    bookmark: BookmarkCreate,
     db: Session = Depends(get_db)
 ):
-    # return create_bookmark_service(bookmark, db)
-    pass
+    page = db.query(Page).filter(Page.url == bookmark.url).first()
+    if not page:
+        # Page 만들기
+        page = Page(
+            title="temporay title",
+            url=bookmark.url,
+            summary="temporay summary",
+            created_at=datetime.now(),
+            state=1
+        )
+        db.add(page)
+        db.commit()
+        db.refresh(page)
+
+    page = db.query(Page).filter(Page.url == bookmark.url).first()
+
+    db_bookmark = Bookmark(
+        page_id=page.page_id,
+        user_id=bookmark.user_id,
+        created_at=datetime.now(),
+        state=1
+    )
+    db.add(db_bookmark)
+    db.commit()
+    db.refresh(db_bookmark)
+
+    response = BookmarkResponse(
+        bookmark_id=db_bookmark.bookmark_id,
+        page_id=db_bookmark.page_id,
+        user_id=db_bookmark.user_id,
+        created_at=db_bookmark.created_at,
+        url=bookmark.url,
+        title=page.title,
+        summarization=page.summary
+    )
+    
+    return db_bookmark
