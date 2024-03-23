@@ -12,6 +12,8 @@ from search.router import router as search_router
 from users.router import router as users_router
 from test.router import router as test_router
 
+from utils.web_crawler import get_title_and_content_selenium
+
 app = FastAPI(
     title="GALPY",
     description="파란만장 팀의 SKYST 프로젝트의 API 문서",
@@ -60,3 +62,9 @@ app.add_middleware(
 async def root():
     result = {"파란만장 화이팅!"}
     return result
+
+@app.get("/content_and_title")
+async def get_content_and_title(url: str):
+    
+    title, content = get_title_and_content_selenium(url)
+    return {"title": title, "content": content}
