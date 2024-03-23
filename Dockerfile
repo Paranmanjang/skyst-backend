@@ -12,14 +12,14 @@ RUN pip install --no-cache-dir -r requirements/prod.txt
 
 # Install required packages and utilities for Chrome and Chromedriver
 RUN apt-get update -qq -y && \
-    && apt-get install -y \
-    && libasound2 \
-    && ibatk-bridge2.0-0 \
-    && libgtk-4-1 \
-    && libnss3 \
-    && xdg-utils \
-    && wget \
-    && unzip \
+        apt-get install -y \
+        libasound2 \
+        ibatk-bridge2.0-0 \
+        libgtk-4-1 \
+        libnss3 \
+        xdg-utils \
+        wget \
+        unzip \
         && \
     && wget -q -O /opt/chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
     && unzip /opt/chrome-linux64.zip -d /opt/ && \
