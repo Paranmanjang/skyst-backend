@@ -11,25 +11,41 @@ COPY requirements/prod.txt requirements/prod.txt
 RUN pip install --no-cache-dir -r requirements/prod.txt
 
 # Install required packages and utilities for Chrome and Chromedriver
-RUN apt-get update -qq -y && \
-    apt-get install -y \
-        libasound2 \
-        libatk-bridge2.0-0 \
-        libgtk-4-1 \
-        libnss3 \
-        xdg-utils \
-        wget \
-        unzip && \
-    wget -q -O /opt/chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
-    unzip /opt/chrome-linux64.zip -d /opt/ && \
-    rm /opt/chrome-linux64.zip && \
-    ln -s /opt/chrome/chrome /usr/local/bin/chrome && \
-    wget -q -O /opt/chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-121-0-6167-85 && \
-    unzip /opt/chromedriver-linux64.zip -d /opt/ && \
-    rm /opt/chromedriver-linux64.zip && \
-    mv /opt/chromedriver /usr/local/bin/chromedriver && \
-    chmod +x /usr/local/bin/chrome /usr/local/bin/chromedriver
+# Install required packages for Google Chrome and wget to download Chrome and Chromedriver
+RUN apt-get update -qqy && apt-get -qqy install \
+    wget \
+    unzip \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libgdk-pixbuf-2.0-0 \
+    libnspr4 \
+    libnss3 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxkbcommon0 \
+    libxrandr2 \
+    xdg-utils \
+    libu2f-udev \
+    libvulkan1 \
+    libgbm1 \
+    libgtk-3-0
 
+# Download and install Google Chrome.
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt install -y ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb
+
+# Set ChromeDriver version
+ENV CHROMEDRIVER_VERSION 97.0.4692.71
+
+# Download and install ChromeDriver
+RUN wget -q --continue -P /chromedriver "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" \
+    && unzip /chromedriver/chromedriver* -d /usr/local/bin/ \
+    && rm /chromedriver/chromedriver_linux64.zip
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
