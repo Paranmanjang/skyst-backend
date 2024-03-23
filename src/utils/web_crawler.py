@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 
 def get_title_and_content_selenium(url):
+    driver = None
     try:
         # Selenium 설정: 머리 없는(headless) 브라우저로 설정
         chrome_options = Options()
