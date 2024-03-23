@@ -9,7 +9,7 @@ class UserInfo(BaseModel):
 
 
 class RecommendationRequest(BaseModel):
-    content: str = Field(..., title="content", description="content", example="contentcontentcontentcontent")
+    essay: str = Field(..., title="content", description="content", example="contentcontentcontentcontent")
 
 
 class BookmarkBase(BaseModel):

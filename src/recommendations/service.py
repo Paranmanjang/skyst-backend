@@ -13,7 +13,7 @@ from utils.ai.vector_db import search_vector
 def get_recommendations_service(request: RecommendationRequest, db: Session):
 
     # 사용자가 작성한 글의 내용을 가져온다
-    content = request.content
+    content = request.essay
 
     # 글을 embedding 한다
     embedding = get_embedding(content)
