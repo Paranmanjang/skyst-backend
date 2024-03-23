@@ -4,14 +4,25 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
+options = webdriver.ChromeOptions()
+options.add_argument('--no-sandbox')
+options.add_argument('--headless')
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--disable-extensions')
+options.add_argument('--disable-gpu')
+
 def get_webpage_content(url):
     # Setup WebDriver
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),
+                              options=options)
+    
+    driver.set_page_load_timeout(90)
 
     # Replace the URL below with the webpage you're interested in
+    driver.implicitly_wait(6)
     driver.get(url)
     
-
     # Wait a bit for the page to load
     time.sleep(2)
 
