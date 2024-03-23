@@ -10,37 +10,29 @@ COPY requirements/prod.txt requirements/prod.txt
 # Install any needed packages specified in requirements files
 RUN pip install --no-cache-dir -r requirements/prod.txt
 
-# Install system dependencies for Chrome and ChromeDriver
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    libglib2.0-0 \
-    libnss3 \
-    libgconf-2-4 \
-    libfontconfig1 \
-    libxi6 \
-    libxrender1 \
-    libxrandr2 \
-    libxfixes3 \
-    libxcursor1 \
-    libxinerama1 \
-    libxcomposite1 \
-    libasound2 \
-    libxdamage1 \
-    libxtst6 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    && rm -rf /var/lib/apt/lists/*
+# Install required packages and utilities for Chrome and Chromedriver
+RUN apt-get update -qq -y && \
+    apt-get install -y \
+        libasound2 \
+        libatk-bridge2.0-0 \
+        libgtk-4-1 \
+        libnss3 \
+        xdg-utils \
+        wget \
+        unzip \
+        && \
+    wget -q -O /opt/chrome-linux64.zip [Direct Chrome download URL] && \
+    unzip /opt/chrome-linux64.zip -d /opt/ && \
+    rm /opt/chrome-linux64.zip && \
+    ln -s /opt/chrome/chrome /usr/local/bin/chrome && \
+    wget -q -O /opt/chromedriver-linux64.zip [Direct Chromedriver download URL] && \
+    unzip /opt/chromedriver-linux64.zip -d /opt/ && \
+    rm /opt/chromedriver-linux64.zip && \
+    mv /opt/chromedriver /usr/local/bin/chromedriver && \
+    chmod +x /usr/local/bin/chrome /usr/local/bin/chromedriver
 
-# Install Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
-
-# Chrome 설치 후
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install \
-    && ln -s /usr/bin/google-chrome /usr/bin/chrome
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy the entire FastAPI project to the container
 COPY /src /app
