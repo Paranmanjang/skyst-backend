@@ -37,7 +37,8 @@ origins = [
     "http://localhost:8000",
     "http://localhost:8080",
     "http://127.0.0.1:8000/",
-    "https://love-skyst.vercel.app/"
+    "https://love-skyst.vercel.app/",
+    "https://love-skyst.vercel.app"
 ]
 
 app.add_middleware(
